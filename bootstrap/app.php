@@ -12,23 +12,8 @@
 */
 
 $app = new Illuminate\Foundation\Application(
-    realpath(__DIR__.'/../../Inter-IIIT_Fest/')
+    realpath(__DIR__.'/../')
 );
-
-/*
-|--------------------------------------------------------------------------
-| Public Path
-|--------------------------------------------------------------------------
-|
-| Set the path to the Laravel "public" directory so that any files/packages
-| that use app('path.public') to get the "public" path find the right path.
-| DO NOT include a trailing slash on the path.
-|
-*/
-$app->bind('path.public', function ()
-{
-    return __DIR__.'/../../public_html';
-});
 
 /*
 |--------------------------------------------------------------------------
