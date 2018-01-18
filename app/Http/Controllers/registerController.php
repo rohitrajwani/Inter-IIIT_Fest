@@ -7,9 +7,21 @@ use Auth;
 use Hash;
 use App\User;
 use App\group;
+use Mail;
+use Illuminate\Support\Facades\Input;
+
 
 class registerController extends Controller
 {
+
+    public function checkemail(Request $data){
+
+        $count = User::where('email',$data->emailid)->get()->count();
+
+        return response()->json(['count' => $count]);
+
+    }
+
     public function confirm($confirmation_code)
     {
         if( ! $confirmation_code){
@@ -51,9 +63,9 @@ class registerController extends Controller
         
         $user->save(); // saving in db
 
-        // Mail::send('verify', ['code' => $confirmation_code], function($message) {
-        //     $message->to(Input::get('email'), Input::get('name'))->subject('Verify your email address');
-        // });
+        /*Mail::send('verify', ['code' => $confirmation_code], function($message) {
+             $message->to(Input::get('email'), Input::get('name'))->subject('Verify your email address');
+        });*/
 
         // Flash::message('Thanks for signing up! Please check your email.');
 
@@ -66,7 +78,7 @@ class registerController extends Controller
        
         $user = Auth::user();
 
-        $user->contact = $data->contact;
+        $user->contact = $data->contact_other;
         $user->city = $data->city;
         $user->state = $data->state;
         $user->gender = $data->gender;
@@ -79,27 +91,6 @@ class registerController extends Controller
         $user->save();
         
         return Response()->json(['success' => 1]);
-    }
-
-    public function group(Request $data){
-
-        $group = new group;
-
-        $group->group_name = $data->group_name;
-        $group->college = $data->group_college;
-
-        $group->save();
-
-        $id = $group->id;
-        $count = 170000 + $id;
-        $groupid = "TCFG".$count;
-
-        $group->group_id = $groupid;
-
-        $group->save();
-
-        return Response()->json(['created' => 1, "groupid" => $groupid]);
-
     }
 
 }

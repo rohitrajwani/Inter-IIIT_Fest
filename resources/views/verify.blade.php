@@ -1,6 +1,6 @@
-@extends('layouts.app')
+<html>
 
-@section('content')
+<body>
         <h2>Verify Your Email Address</h2>
 
         <div>
@@ -9,4 +9,5 @@
             {{ URL::to('register/verify/' . $code) }}.<br/>
 
         </div>
-@endsection
+</body>
+</html>

@@ -31,6 +31,65 @@ $(function(){
 
         },1000);
     });
+
+    $('.register-form').on('keyup',"[name='email']",function(){
+        var elem = $(this);
+        var email = elem.val(); 
+
+        if(email.length > 3)
+        {  
+
+            $.ajax({
+                type : 'POST',
+                url  : '/checkemail',
+                data : {
+                    _token : $('input[name="_token"]').val(),
+                    emailid : email
+                },
+                success : function(result){
+                    if(result.count > 0){
+                        elem.next('.email-error').html('Email ID already Registered!!').fadeIn();
+                        elem.parents().siblings('.input-field').find('button').prop("disabled" ,true).fadeIn();
+                    }
+                    else{
+                        elem.next('.email-error').html('').fadeIn();
+                        elem.parents().siblings('.input-field').find('button').prop("disabled" ,false).fadeIn();
+                    }
+                },
+                error : function(){
+                    alert("Server Error, Contact web team for assistance");
+                }
+            });
+
+            return false;
+        }
+        else
+        {
+            elem.next('.email-error').html('').fadeIn();
+        }
+    });
+
+    $('.register-form').on('keyup', '[name = "cnfPassword"]',function(){
+        var pass = $('.register-form [name="password"]').val();
+        var elem = $(this);
+        var cnf = elem.val();
+
+        if(cnf.length > 1){
+
+            if(cnf != pass){
+                elem.next('.pass-error').html('Password Mismatch!!').fadeIn();
+                elem.parents().siblings('.input-field').find('button').prop('disabled' , true);
+            }
+            else{
+                elem.next('.pass-error').html('').fadeIn();
+                elem.parents().siblings('.input-field').find('button').prop('disabled' , false);   
+            }
+        }
+        else{
+            elem.next('.pass-error').html('').fadeIn();
+        }
+
+    });
     
     $('.register-form').on('submit','.register_form',function(e){
         var reg_form = $(this);
@@ -75,6 +134,8 @@ $(function(){
             $('.login-modal .details-form #iiitflag').val('No');
         }
     });
+
+
 
     $('.details-form').on('submit','.details_form',function(e){
         var det_form = $(this);
@@ -129,7 +190,7 @@ $(function(){
     });
     
     
-    $(".main-nav a").on('click',function(){
+    $(".main-nav a, .main a.link-card, footer a").on('click',function(){
         var menu = $(this).attr('id');
         
         $('.main-nav').find('a.active').removeClass('active');
@@ -137,24 +198,54 @@ $(function(){
         
         if(menu == "home"){
             $('.club-nav').hide();
-            $('.about, h1.header, .events, .contact').fadeOut();
+            $('.about, h1.header, .events, .contact, .team, .sponsors, .mega, .web-team').fadeOut();
             $('.'+menu).fadeIn();
         }
         else if(menu == "about"){
             $('.club-nav').hide();
-            $('.home, .events, .contact').fadeOut();
+            $('.home, .events, .contact, .team, .mega, .sponsors, .web-team').fadeOut();
             $('h1.header').html(menu).fadeIn();
             $('.'+menu).fadeIn();
         }
         else if(menu == "events"){
-            $('.home, .about, .contact').fadeOut();
+            $('.events').find('.event-desc-container.active').removeClass('active');
+            $('.events a.close-btn').fadeOut();
+            $('.main-btn-container').fadeIn();
+            $('.club-nav').hide();
+            $('.nav-option').fadeOut();
+            $('.home, .about, .contact, .team, .mega, .sponsors, .web-team').fadeOut();
             $('h1.header').html(menu).fadeIn();
             $('.'+menu).fadeIn();
         }
         else if(menu == "contact"){
-            $('.home, .about, .events').fadeOut();
+            $('.club-nav').hide();
+            $('.home, .about, .events, .team, .mega, .sponsors, .web-team').fadeOut();
             $('h1.header').html(menu).fadeIn();
             $('.'+menu).fadeIn();
+        }
+        else if(menu == 'team'){
+            $('.club-nav').hide();
+            $('.home, .about, .events, .contact, .mega, .sponsors, .web-team').fadeOut();
+            $('h1.header').html(menu).fadeIn();
+            $('.'+menu).fadeIn();   
+        }
+        else if(menu == 'mega'){
+            $('.club-nav').hide();
+            $('.home, .about, .events, .contact, .team, .sponsors, .web-team').fadeOut();
+            $('h1.header').html("Mega Events").fadeIn();
+            $('.'+menu).fadeIn();   
+        }
+        else if(menu == 'sponsors'){
+            $('.club-nav').hide();
+            $('.home, .about, .events, .contact, .team, .mega, .web-team').fadeOut();
+            $('h1.header').html(menu).fadeIn();
+            $('.'+menu).fadeIn();   
+        }
+        else if(menu == 'web-team'){
+            $('.club-nav').hide();
+            $('.home, .about, .events, .contact, .team, .mega, .sponsors').fadeOut();
+            $('h1.header').html('Web Team').fadeIn();
+            $('.'+menu).fadeIn();   
         }
     });
 
@@ -239,54 +330,76 @@ $(function(){
         }
     });
 
-    $('.events .event-desc .group-modal').on('submit','.register_group',function(e){
-        var btn = $(this).find('button');
-        var event_id = btn.attr('data-event-id');
-        var data = $(this).serialize() + '&event_id='+event_id;
+    $('.mega .mega-modal #vinyl-modal').on('click', 'button.register-mega', function(){
+        var event_btn = $(this);
+        var event_id = event_btn.attr("data-event-id");
+        var csrf_token = $('meta[name="csrf-token"]').attr('content');
 
-        btn.html('Registering....');
-        e.preventDefault();
-        $.post("register/event/group", data, function(result,status){
+        event_btn.html('Registering....');
+        var data = {'_token' : csrf_token, 'event' : event_id};
+        
+        $.post("/register/event/single", data, function(result,status){
             if(status == "success"){
-                if(result.flag == "OK"){
-                    btn.html('Registered').prop('disabled', true).attr('data-registered',1);
-                    $('[data-event-id="'+event_id+'"]').html('Registered').prop('disabled',true).attr('data-registered',1);
-                    setTimeout(function(){
-                        $('#modal-'+event_id).closeModal();
-                    },1000);
-                }
-                else if(result.flag == "duplicate"){
-
+                if(result.registered){
+                    event_btn.html('Registered').prop('disabled', true).attr("data-registered",1);
+                    $('.mega .mega-modal#dj_war .modal-content').find('[data-event-id = "vinyl"]').attr("data-registered",1).html('Registered').prop('disabled' , true);
+                    $('#vinyl-modal').closeModal();
                 }
                 else{
-                    alert('Some Error has occurred!! Kindly report this to the web team.');
+                    alert("Error Registering");
                 }
             }
             else if(status == "error"){
                 alert("Server Error, Contact web team for assistance.");
-                btn.html('Register');
+                event_btn.html('Register');
             }
         });
     });
 
     $('.events .event-desc .group-modal').on('submit','.group_details',function(e){
-        var data = $(this).serialize();
+        var form = $(this);
+        var data = form.serialize();
+        var event_id = form.find('[name = event_id]').attr('value');
+
+        form.find('button.reg-member').html('Registering...').prop('disabled',true).fadeIn();
 
         e.preventDefault();
-        $.post("register/group", data, function(result,status){
+        $.post("register/event/group", data, function(result,status){
             if(status == "success"){
                 if(result.created){
+                    form.find('input').prop('disabled',true);
+                    form.find('button').html('Saved').prop('disabled',true).fadeIn();
                     $('.events .event-desc .group-modal .group-details').fadeOut();
-                    $('.events .event-desc .group-modal .modal-content').append('<div class="affirm-group col s12"><h5 class="col s12">Your Group ID is <span class="green-text">'+result.groupid+'</span></h5><h6 class="col s12">Use it to register for group events.</h6></div>');            
+                    $('.event .event-desc').find('[data-event-id='+ event_id +']').attr('data-registered',1).html('Registered').prop('disabled',true);
+                    $('.events .event-desc .group-modal .modal-content').append('<div class="affirm-group col s12"><h5 class="col s12">Your Group ID is <span class="green-text">'+result.groupid+'</span></h5><h6 class="col s12">Keep it safe for future references.</h6></div>');                                
                 }
                 else{
                     alert('Some Error has occurred!!');
+                    form.find('button.reg-member').html('Register Group').prop('disabled',false).fadeIn();
                 }
             }
             else if(status == "error"){
                 alert("Server Error, Contact web team for assistance.");
             }
         });
+    });
+
+    $('.events .event-desc .group-modal').on('click','button.add-member',function(){
+        $('.events .event-desc .group-modal .members.input-field').append('<div class="member col s12"><input type="text" class="group_member col s6 validate" name="members[]" id="group_member" placeholder="Enter Fest ID (Team Member)" required><button type="button" class="save-member btn-flat col s2 offset-s2">Save</button><button type="button" class="delete-member btn-flat col s2">Delete</button></div>');
+    });
+
+    $('.events .event-desc .group-modal').on('click','button.delete-member',function(){
+        this.closest('.member').remove();
+    });
+
+    $('.events .event-desc .group-modal .group-details').on('click','button.save-member',function(){
+        $(this).prev('input').prop('readonly',true);
+        $(this).html('Edit').removeClass('save-member').addClass('edit-member');
+    });
+
+    $('.events .event-desc .group-modal .group-details').on('click','button.edit-member',function(){
+        $(this).prev('input').prop('readonly',false);
+        $(this).html('Save').removeClass('edit-member').addClass('save-member');
     });
 
     $('.events .event-desc .group-modal').on('click','button.create-group',function(){
@@ -295,6 +408,55 @@ $(function(){
         setTimeout(function(){
             $('.events .event-desc .group-modal .group-details').fadeIn('slow');
         },500);
+    });
+
+    $('.events .group-modal .group-details').on('keyup',".group_member",function(){
+        var elem = $(this);
+        var fest_id = elem.val(); 
+
+        if(fest_id.length > 3)
+        {  
+
+            $.ajax({
+                type : 'POST',
+                url  : '/checkfestid',
+                data : {
+                    _token : $('input[name="_token"]').val(),
+                    festid : fest_id
+                },
+                success : function(result){
+                    if(result.count == 0){
+                        elem.next('.save-member').prop('disabled',true).html('Invalid Fest ID');
+                        elem.parents().siblings('.reg-member').prop("disabled" ,true);
+                    }
+                    else{
+                        elem.next('.save-member').prop('disabled',false).html('Save');
+                        elem.parents().siblings('.reg-member').prop("disabled" ,false);
+                    }
+                },
+                error : function(){
+                    alert("Server Error, Contact web team for assistance");
+                }
+            });
+
+            return false;
+        }
+        else
+        {
+            $("#error-username").html('');
+        }
+    });
+
+    $('.team .team-nav').on('click','a.team-tab',function(){
+        var team_tab = $(this);
+        var name = team_tab.html();
+        
+        $('.team .team-nav').find('a.team-tab.active').removeClass('active');
+        team_tab.addClass('active').fadeIn();
+
+        $('.team .team-container h4').html(name).fadeIn();
+        $('.team .team-container').find('.team-card-container.active').removeClass('active');
+        $('.team .team-container '+ team_tab.attr('href')).addClass('active').fadeIn();
     });
 
 })

@@ -19,7 +19,13 @@ class loginController extends Controller
 
     public function handleProviderCallback(Request $request, $provider)
     {
-        $user = Socialite::driver($provider)->user();
+
+        try {
+            $user = Socialite::driver($provider)->user();
+        } catch (Exception $e) {
+            return redirect('auth/'.$provider);
+        }
+
         $authUser = $this->findOrCreateUser($user, $provider);
 
         Auth::login($authUser, true);
@@ -36,7 +42,6 @@ class loginController extends Controller
             $user = User::create([
                         'name'     => $socialuser->name,
                         'email'    => $socialuser->email,
-                        //'provider' => $provider,
                         'social_id' => $socialuser->id
                     ]);
 

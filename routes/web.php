@@ -12,6 +12,8 @@
 */
 
 Route::get('/', 'eventController@index');
+Route::get('/beta', 'eventController@beta');
+
 Route::post('/getmsg','AjaxController@index');
 Route::get('/events',function(){
 	return view('events');
@@ -29,7 +31,9 @@ Route::post('/register','registerController@Signup');
 Route::post('/register/details','registerController@details');
 
 Route::post('/register/event/{type}','eventController@register');
-Route::post('/register/group', 'registerController@group');
+Route::post('/checkfestid', 'eventController@checkfestid');
+Route::post('/checkemail', 'registerController@checkemail');
+
 //2/3/17
 Route::get('register/verify/{confirmationCode}', [
     'as' => 'confirmation_path',
