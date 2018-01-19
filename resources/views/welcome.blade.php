@@ -31,7 +31,7 @@
             @if(Auth::check())
                     <a class="btn-flat btn col 12 dropdown-button" href="/logout" data-activities="user_dropdown">{{ Auth::user()->fest_id }}(Logout)</a>
             @else
-                    <!-- <a class="btn-flat col 12 modal-trigger" href="#login">Login / Register</a> -->
+                    <a class="btn-flat col 12 modal-trigger" href="#login">Login / Register</a>
             @endif
                 </div>
             @if(Auth::check() && Auth::user()->city != null)
@@ -2809,7 +2809,11 @@ will be given to both teams to straighten wires and bots will be placed back in 
                 <div class="sponsors-container col s12">
 
                     <div class="col s12 m6">
+<<<<<<< HEAD
                     	<h4 class="col s12">Associate Sponsors</h4>
+=======
+                        <h4 class="col s12">Associate Sponsors</h4>
+>>>>>>> b223c9ff174b33ebc95035bf2ac33710f027f0df
                         <a target="_blank" href="https://www.sbi.co.in/" class="sponsor-icon col s12 m6" >
                             <img class="col s8 offset-s2" src="/img/sponsors/sbi.png">
                         </a>
@@ -2824,6 +2828,7 @@ will be given to both teams to straighten wires and bots will be placed back in 
                             <img class="col s6 offset-s3" src="/img/sponsors/ald-bank.png" style="margin-top:45px">
                         </a>
                     </div>
+<<<<<<< HEAD
                     <div class="col s12 m3">
                         <h4 class="col s12 ">Technical Sponsor</h4>
                         <a target="_blank" href="http://www.coviam.com/" class="sponsor-icon col s12 m8 offset-m2">
@@ -2846,6 +2851,24 @@ will be given to both teams to straighten wires and bots will be placed back in 
                         <h4 class="col s12">Beverage Partner</h4>
                         <a target="_blank" href="http://www.coca-colacompany.com" class="sponsor-icon col s12 m8 offset-m2">
                             <img class="col s12" src="/img/sponsors/coca.png">
+=======
+                    <div class="col s12 m4">
+                        <h4 class="col s12 ">Technical Sponsor</h4>
+                        <a target="_blank" href="http://www.coviam.com/" class="sponsor-icon col s12 m8 offset-m2">
+                            <img class="col s10 offset-s1" src="/img/sponsors/coviam.png">
+                        </a>
+                    </div>
+                    <div class="col s12 m4">
+                        <h4 class="col s12">Education Sponsor</h4>
+                        <a target="_blank" href="http://www.time4education.com/" class="sponsor-icon col s12 m8 offset-m2">
+                            <img class="col s10 offset-s1" src="/img/sponsors/time.png">
+                        </a>
+                    </div>
+                    <div class="col s12 m4">
+                        <h4 class="col s12">Event Sponsor</h4>
+                        <a target="_blank" href="http://www.vassarlabs.com/" class="sponsor-icon col s12 m8 offset-m2">
+                            <img class="col s10 offset-s1" src="/img/sponsors/vassar.png">
+>>>>>>> b223c9ff174b33ebc95035bf2ac33710f027f0df
                         </a>
                     </div>
                     <div class="col s12 m12">
@@ -2876,7 +2899,11 @@ will be given to both teams to straighten wires and bots will be placed back in 
                         <h4 class="last name col s12">Rajwani</h4>
                         <a href="mailto:rohitrajwani@iiitdmj.ac.in"><i class="col s12 fa fa-envelope"></i></a>
                     </div>
+<<<<<<< HEAD
                     <div class="web-member col s6 m2" >
+=======
+                    <div class="web-member col s6 m2">
+>>>>>>> b223c9ff174b33ebc95035bf2ac33710f027f0df
                         <h4 class="first name col s12">Animesh</h4>
                         <img src="/img/web/animesh.jpg">
                         <h4 class="last name col s12">Pandey</h4>
@@ -2941,6 +2968,12 @@ will be given to both teams to straighten wires and bots will be placed back in 
                 $(document).find("[data-event-id='" + reg_events_single[i] + "']").attr('data-registered',1).html('Registered').prop('disabled',true);
             for(i in reg_events_group)
                 $(document).find("[data-event-id='" + reg_events_group[i] + "']").attr('data-registered',1).html('Registered').prop('disabled',true);
+<<<<<<< HEAD
+=======
+        </script>
+        <script type="text/javascript">
+            console.log("So, there has to be a riddle here. But I am afraid I cant find it right now. Come back later. ;-)");
+>>>>>>> b223c9ff174b33ebc95035bf2ac33710f027f0df
         </script>
         
     </body>
